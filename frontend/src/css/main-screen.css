@@ -1,0 +1,7 @@
+.map {
+  height: 400px;
+  width: 100%;
+}
+.main-menu__link {
+  text-transform: uppercase;
+}

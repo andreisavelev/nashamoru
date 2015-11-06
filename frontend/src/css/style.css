@@ -7209,3 +7209,10 @@ button.close {
   background: #fff;
   border: 1px solid #666;
 }
+.map {
+  height: 400px;
+  width: 100%;
+}
+.main-menu__link {
+  text-transform: uppercase;
+}

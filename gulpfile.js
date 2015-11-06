@@ -25,7 +25,8 @@ gulp.task('scripts', function() {
 	return gulp.src([
 		"./frontlibs/jquery/dist/jquery.min.js",
 		"./frontlibs/bootstrap/dist/js/bootstrap.min.js",
-		"frontlibs/leaflet/dist/leaflet.js"
+		"frontlibs/leaflet/dist/leaflet.js",
+		"frontlibs/firebase/firebase.js"
 	])
 		.pipe(concat('common.js'))
 		.pipe(gulp.dest('./frontend/src/js/'));
@@ -57,4 +58,4 @@ gulp.task('watch', function () {
 	gulp.watch(['./frontend/src/*.html', './frontend/src/js/*.js', './frontend/src/css/*.less'], ['js', 'less', 'html']);
 });
 
-gulp.task('default', ['scripts', 'leafletimg', 'less', 'bootstrapfont', 'connect']);
+gulp.task('default', ['scripts', 'leafletimg', 'less', 'bootstrapfont', 'connect', 'watch']);
