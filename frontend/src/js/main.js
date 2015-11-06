@@ -66,6 +66,10 @@ $(document).ready(function () {
 		document.cookie = updatedCookie;
 	};
 
+	/**
+	*
+	* return {number}
+	*/
 	var generateUserId = function () {
 		return Math.floor((Math.random() * 100))
 	};
@@ -85,18 +89,6 @@ $(document).ready(function () {
 		}
 		cnt = 1;
 	};
-
-	/*var geoIcon = L.icon({
-		iconUrl: '../img/geo-icon.png',
-		iconRetinaUrl: 'my-icon@2x.png',
-		iconSize: [78, 78],
-		iconAnchor: [22, 94],
-		popupAnchor: [-3, -76]
-		/!*shadowUrl: 'my-icon-shadow.png',
-		shadowRetinaUrl: 'my-icon-shadow@2x.png',*!/
-		/!*shadowSize: [68, 95],
-		shadowAnchor: [22, 94]*!/
-	});*/
 
 	var myIcon = L.divIcon({className: 'my-div-icon'});
 
