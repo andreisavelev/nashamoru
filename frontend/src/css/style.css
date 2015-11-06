@@ -7216,3 +7216,8 @@ button.close {
 .main-menu__link {
   text-transform: uppercase;
 }
+.my-div-icon {
+  height: 32px;
+  width: 32px;
+  background: black;
+}

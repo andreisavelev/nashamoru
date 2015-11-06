@@ -16,6 +16,11 @@ $(document).ready(function () {
 		secure: false
 	};
 
+	/**
+	 * Get Cookie by name
+	 * @param name {string}
+	 * @returns {*}
+	 */
 	var  getCookie = function (name) {
 		var matches = document.cookie.match(new RegExp(
 			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -23,6 +28,12 @@ $(document).ready(function () {
 		return matches ? decodeURIComponent(matches[1]) : undefined;
 	};
 
+	/**
+	 *
+	 * @param name {string}
+	 * @param value {string|object}
+	 * @param options {object|undefined}
+	 */
 	var setCookie = function (name, value, options) {
 		options = options || {};
 
@@ -52,27 +63,30 @@ $(document).ready(function () {
 		document.cookie = updatedCookie;
 	};
 
-	var geoIcon = L.icon({
+	/*var geoIcon = L.icon({
 		iconUrl: '../img/geo-icon.png',
 		iconRetinaUrl: 'my-icon@2x.png',
 		iconSize: [78, 78],
 		iconAnchor: [22, 94],
 		popupAnchor: [-3, -76]
-		/*shadowUrl: 'my-icon-shadow.png',
-		shadowRetinaUrl: 'my-icon-shadow@2x.png',*/
-		/*shadowSize: [68, 95],
-		shadowAnchor: [22, 94]*/
-	});
+		/!*shadowUrl: 'my-icon-shadow.png',
+		shadowRetinaUrl: 'my-icon-shadow@2x.png',*!/
+		/!*shadowSize: [68, 95],
+		shadowAnchor: [22, 94]*!/
+	});*/
+
+	var myIcon = L.divIcon({className: 'my-div-icon'});
 
 	if ( getCookie(cookie)) {
-
-		L.marker( ).addTo(map);
+		var position = JSON.parse(getCookie(cookie));
+		var total = L.marker( [Number(position.lat.toFixed(3)), Number(position.lng.toFixed(3))], {icon: myIcon}).addTo(map);
+		//console.log(Number(position.lat.toFixed(3)), position.lng);
+	} else {
+		console.log("Nop");
 	}
 
 	map.on('click', function (e) {
-		var geoData = JSON.stringify(e.latlng);
-		setCookie(cookie, geoData);
-		console.log(getCookie(cookie));
-		//var myMarker = L.marker([e.latlng.lat, e.latlng.lng], {icon: geoIcon}).addTo(map);
+		L.marker([e.latlng.lat, e.latlng.lng], {icon: myIcon}).addTo(map);
+		console.log(myIcon);
 	});
 });
