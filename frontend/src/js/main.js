@@ -80,6 +80,7 @@ $(document).ready(function () {
 				};
 
 				setCookie(cookie, JSON.stringify(userData));
+				ref.set(userData);
 			});
 		}
 		cnt = 1;
