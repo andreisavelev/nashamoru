@@ -4,6 +4,7 @@ var opn = require("opn");
 var min = require("gulp-uglify");
 var less = require("gulp-less");
 var concat = require("gulp-concat");
+var path = require("path");
 
 // Compile less
 gulp.task('less', function () {
@@ -11,5 +12,43 @@ gulp.task('less', function () {
 		.pipe(less({
 			paths: [ path.join(__dirname, 'less', 'includes') ]
 		}))
-		.pipe(gulp.dest('./frontend/app/css'));
+		.pipe(gulp.dest('./frontend/src/css'))
 });
+
+gulp.task('bootstrapfont', function () {
+	return gulp.src('./frontlibs/bootstrap/fonts/*.*')
+		.pipe(gulp.dest('./frontend/src/css/fonts/'))
+});
+
+// Concat js
+gulp.task('scripts', function() {
+	return gulp.src([
+		"./frontlibs/jquery/dist/jquery.min.js",
+		"./frontlibs/bootstrap/dist/js/bootstrap.min.js"
+	])
+		.pipe(concat('common.js'))
+		.pipe(gulp.dest('./frontend/src/js/'));
+});
+
+gulp.task('connect', function() {
+	connect.server({
+		root: './frontend/src',
+		livereload: true
+	});
+});
+
+gulp.task('html', function () {
+	gulp.src('./frontend/src/*.html')
+		.pipe(connect.reload());
+});
+
+gulp.task('js', function () {
+	gulp.src('./frontend/src/js/*.js')
+		.pipe(connect.reload());
+});
+
+gulp.task('watch', function () {
+	gulp.watch(['./frontend/src/*.html', './frontend/src/js/*.js', './frontend/src/css/*.less'], ['js', 'less', 'html']);
+});
+
+gulp.task('default', ['scripts', 'less', 'bootstrapfont', 'connect']);
