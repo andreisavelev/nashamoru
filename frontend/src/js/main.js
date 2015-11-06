@@ -63,6 +63,25 @@ $(document).ready(function () {
 		document.cookie = updatedCookie;
 	};
 
+	var generateUserId = function () {
+		return Math.floor((Math.random() * 100))
+	};
+
+	var setIcon = function (cnt) {
+		if(cnt !== 1) {
+			map.on('click', function (e) {
+				L.marker([e.latlng.lat, e.latlng.lng], {icon: myIcon}).addTo(map);
+				var userData = {
+					id: generateUserId(),
+					position: e.latlng
+				};
+
+				setCookie(cookie, JSON.stringify(userData));
+			});
+		}
+		cnt = 1;
+	};
+
 	/*var geoIcon = L.icon({
 		iconUrl: '../img/geo-icon.png',
 		iconRetinaUrl: 'my-icon@2x.png',
@@ -77,12 +96,14 @@ $(document).ready(function () {
 
 	var myIcon = L.divIcon({className: 'my-div-icon'});
 
-	if ( getCookie(cookie)) {
-		var position = JSON.parse(getCookie(cookie));
-		var total = L.marker( [Number(position.lat.toFixed(3)), Number(position.lng.toFixed(3))], {icon: myIcon}).addTo(map);
-		//console.log(Number(position.lat.toFixed(3)), position.lng);
+	if ( getCookie(cookie) ){
+		var userData = JSON.parse( getCookie(cookie) );
+
+		console.log(getCookie(cookie));
+		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
-		console.log("Nop");
+		var cnt;
+		setIcon(cnt);
 	}
 
 	map.on('click', function (e) {
