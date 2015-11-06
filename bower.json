@@ -1,0 +1,31 @@
+{
+  "name": "nashamoru",
+  "description": "application for users with disabilities",
+  "main": "index.js",
+  "authors": [
+    "HakTeam"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "disabilities",
+    "help"
+  ],
+  "homepage": "https://github.com/savelevcorr/nashamoru",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "moment": "momentjs#~2.10.6",
+    "backbone": "~1.2.3"
+  }
+}
