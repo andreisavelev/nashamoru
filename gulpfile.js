@@ -24,7 +24,8 @@ gulp.task('bootstrapfont', function () {
 gulp.task('scripts', function() {
 	return gulp.src([
 		"./frontlibs/jquery/dist/jquery.min.js",
-		"./frontlibs/bootstrap/dist/js/bootstrap.min.js"
+		"./frontlibs/bootstrap/dist/js/bootstrap.min.js",
+		"frontlibs/leaflet/dist/leaflet.js"
 	])
 		.pipe(concat('common.js'))
 		.pipe(gulp.dest('./frontend/src/js/'));
@@ -38,17 +39,22 @@ gulp.task('connect', function() {
 });
 
 gulp.task('html', function () {
-	gulp.src('./frontend/src/*.html')
+	return gulp.src('./frontend/src/*.html')
 		.pipe(connect.reload());
 });
 
 gulp.task('js', function () {
-	gulp.src('./frontend/src/js/*.js')
+	return gulp.src('./frontend/src/js/*.js')
 		.pipe(connect.reload());
+});
+
+gulp.task('leafletimg', function () {
+	return gulp.src('./frontlibs/leaflet/dist/images/*.*')
+		.pipe(gulp.dest('./frontend/src/js/images/'))
 });
 
 gulp.task('watch', function () {
 	gulp.watch(['./frontend/src/*.html', './frontend/src/js/*.js', './frontend/src/css/*.less'], ['js', 'less', 'html']);
 });
 
-gulp.task('default', ['scripts', 'less', 'bootstrapfont', 'connect']);
+gulp.task('default', ['scripts', 'leafletimg', 'less', 'bootstrapfont', 'connect']);

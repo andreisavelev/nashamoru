@@ -27,6 +27,7 @@
   "dependencies": {
     "moment": "momentjs#~2.10.6",
     "backbone": "~1.2.3",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "leaflet": "~0.7.7"
   }
 }
