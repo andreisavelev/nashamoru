@@ -138,8 +138,9 @@ $(document).ready(function () {
 			L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 		});
 	} else {
-<<<<<<< HEAD
+
 		/* checkout to driver and get all data */
+		/* test comment */ 
 		ref.on("value", function(snapshot) {
 	 
 		snapshot.forEach(function(childSnapshot) {
@@ -155,11 +156,7 @@ $(document).ready(function () {
 			  });
 		  
 		});
-=======
-		var cnt;
-		setIcon(cnt);
-		cnt = 1;
->>>>>>> b2355fae39a5a61cdc1889d582ba1e37278e53a4
+
 	}
 
 });
