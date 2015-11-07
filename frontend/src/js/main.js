@@ -4,6 +4,7 @@ $(document).ready(function () {
 	// Connect to firebase
 	var ref = new Firebase('https://toshamora.firebaseio.com/nashamoru/');
 
+	// Init map
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18,
@@ -100,8 +101,7 @@ $(document).ready(function () {
 				};
 
 				setCookie(passenger, JSON.stringify(userData));
-				ref.push(userData, function(e){
-					console.log("Event", e);
+				return ref.push(userData, function(e){
 					console.log("HasAdded", "Yes");
 				});
 			});
@@ -109,15 +109,34 @@ $(document).ready(function () {
 		cnt = 1;
 	};
 
+	var getUserData = function (id, callback) {
+		var data,
+	    position;
+
+		ref.on("value", function(snapshot) {
+			return snapshot.forEach(function(childSnapshot) {
+			   data = childSnapshot.val();
+
+			    if (data.id === id) {
+			    	callback(data.position);
+			    }
+
+			});
+		});
+	};
+
 	var myIcon = L.divIcon({className: 'my-div-icon'});
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
-		console.log(userData);
-		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
+		getUserData(userData.id, function (position) {
+			L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
+		});
+		//L.marker([usersPosition.lat.toFixed(3), usersPosition.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
 		var cnt;
 		setIcon(cnt);
+		cnt = 1;
 	}
 
 	/*map.on('click', function (e) {
