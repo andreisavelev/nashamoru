@@ -126,8 +126,29 @@ $(document).ready(function () {
 		});
 	};
 
+	// getting all the markers at once
+	var getAllMarkers = function () {
+
+	    var allMarkersObjArray = []; // for marker objects
+	    var allMarkersGeoJsonArray = []; // for readable geoJson markers
+
+	    $.each(map._layers, function (ml) {
+
+	        if (map._layers[ml].feature) {
+
+	            allMarkersObjArray.push(this)
+	            allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+	        }
+
+	        console.log(allMarkersObjArray);
+	    })
+
+	}
+
 	var setNewPlace = function (e) {
 		var currentPosition = e.latlng;
+		var that = this;
+		map.removeLayer(that);
 	};
 
 	var myIcon = L.divIcon({className: 'my-div-icon'});
@@ -135,9 +156,10 @@ $(document).ready(function () {
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
 		getUserData(userData.id, function (position) {
-			var currentPos = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
+			var marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
 			.addTo(map)
 			.on('click', setNewPlace);
+			console.log(marker._leaflet_id);
 		});
 	} else {
 		/* checkout to driver and get all data */
@@ -157,5 +179,13 @@ $(document).ready(function () {
 		  
 		});
 	}
+
+	$(passengerLink).on('click', function (e) {
+
+		var markers = new L.FeatureGroup();
+		//
+		e.preventDefault();
+
+	});
 
 });
