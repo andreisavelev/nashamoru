@@ -125,6 +125,10 @@ $(document).ready(function () {
 		});
 	};
 
+	var setNewPlace = function (e) {
+		conso
+	};
+
 	var myIcon = L.divIcon({className: 'my-div-icon'});
 
 	if ( getCookie(passenger) ){
@@ -132,26 +136,10 @@ $(document).ready(function () {
 		getUserData(userData.id, function (position) {
 			L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 		});
-		//L.marker([usersPosition.lat.toFixed(3), usersPosition.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
 		var cnt;
 		setIcon(cnt);
 		cnt = 1;
 	}
 
-	/*map.on('click', function (e) {
-		L.marker([e.latlng.lat, e.latlng.lng], {icon: myIcon}).addTo(map);
-		console.log(myIcon);
-	});*/
-
-	// Workin whith main menu buttons
-	/*$(driverLink).on("click", (function(event){
-		if ( getCookie(driver) ) {
-			return;
-		} else {
-			deleteCookie(passenger);
-
-		}
-		event.preventDefault();
-	});*/
 });
