@@ -33,7 +33,7 @@ $(document).ready(function () {
 	 * @param name {string}
 	 * @returns {*}
 	 */
-	var  getCookie = function (name) {
+	var getCookie = function (name) {
 		var matches = document.cookie.match(new RegExp(
 			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
 		));
@@ -82,7 +82,7 @@ $(document).ready(function () {
 	};
 
 	/**
-	*
+	* 
 	* return {number}
 	*/
 	var generateUserId = function () {
@@ -151,6 +151,7 @@ $(document).ready(function () {
 		map.removeLayer(that);
 	};
 
+	// Create icon template
 	var myIcon = L.divIcon({className: 'my-div-icon', iconSize: L.point(32, 32)});
 
 	if ( getCookie(passenger) ){
@@ -184,7 +185,9 @@ $(document).ready(function () {
 		});
 	}
 
+	// Remove all icons from map
 	$(passengerLink).on('click', function (e) {
-
+		$('.my-div-icon').remove();
+		
 	});
 });
