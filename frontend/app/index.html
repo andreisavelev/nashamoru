@@ -25,14 +25,91 @@
                     </li>
                     <li class="main-menu__item js-main-menu-item"><a href="#" class="main-menu__link js-main-menu-link js-passenger-link">Хочу на море</a>
                     </li>
-                    <li class="main-menu__item js-main-menu-item"><a href="#" class="main-menu__link js-main-menu-link js-donate-link">Помощь проекту</a></li>
+					<li class="main-menu__item js-main-menu-item"><a href="#" class="main-menu__link js-main-menu-link js-donate-link" data-toggle="modal" data-target="#donate">Помощь проекту</a>
+					</li>					
+					<li class="main-menu__item js-main-menu-item"><a href="#" class="main-menu__link js-main-menu-link js-userinfo-link" data-toggle="modal" data-target="#userinfo">Моя информация</a>
+					</li>
                 </ul>
             </nav>
-        </div>
+			
+			
+			<!-- Donate modal -->			 
+			<div id="donate" class="modal fade" tabindex="-1" role="dialog">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Помощь проекту</h4>
+				  </div>
+				  <div class="modal-body">
+					<p>Привет друг! Ты делаешь хорошее дело, помогая людям с ограниченными возможностями. Вместе мы делаем мир теплее и интереснее)</p>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-primary">OK</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+				 
+			<!-- Info modal -->			
+			<div id="userinfo" class="modal fade" tabindex="-1" role="dialog">
+			  <div class="modal-dialog modal-sm">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Обо мне</h4>
+				  </div>
+				  <div class="modal-body">
+					 <div class="form-group">
+						<label for="exampleInputName">Ваше имя</label>
+						<input type="text" class="form-control" id="exampleInputName" placeholder="Василий">
+					  </div>
+					  <div class="form-group">
+						<label for="exampleInputPhone">Ваш телефон</label>
+						<input type="phone" class="form-control" id="exampleInputPhone" placeholder="+7 123 111 11 11">
+					  </div>
+					  <div class="form-group">
+						<label for="exampleInputPhone">Вид инвалидности</label>
+						<input type="text" class="form-control" id="exampleInputType" placeholder="колясочник">
+					  </div>
+					  <div class="form-group">
+						  <label for="exampleInputSettings">Желаемые условия проезда</label>
+						  <select class="form-control">						  
+							  <option>Нет особых условий</option>
+							  <option>Можно курить</option>
+							  <option>Можно слушать музыку</option>
+							  <option>Только женщины</option>							  
+						  </select>
+					  </div>
+					  <div class="form-group">
+						  <label for="exampleInputTime">Когда вы готовы поехать</label>
+						  <select class="form-control">						  
+							  <option>Не имеет значения</option>
+							  <option>Утром</option>
+							  <option>Днем</option>
+							  <option>Вечером</option>							  
+						  </select>
+					  </div>
+					  <div class="form-group">
+						  <label for="exampleInputComment">Ваш коментарий</label>
+						  <textarea class="form-control" rows="3"></textarea>						 
+					  </div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-primary">OK</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
+			
+        </div>		
     </div>
 
     <script src="js/common.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/firedriver.js"></script>
+    <script src="js/main.js"></script>   
 </body>
 </html>
