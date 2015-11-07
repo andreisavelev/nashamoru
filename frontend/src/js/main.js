@@ -152,7 +152,9 @@ $(document).ready(function () {
 				  console.log("KEY", key);
 				  console.log("chaldData", childData.position.lat);
 				  
-				  L.marker([childData.position.lat, childData.position.lng], {icon: myIcon}).addTo(map);
+				  L.marker([childData.position.lat, childData.position.lng], {
+				  icon: myIcon				  
+				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map);
 			  });
 		  
 		});
