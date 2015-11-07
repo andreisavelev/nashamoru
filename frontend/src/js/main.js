@@ -99,8 +99,8 @@ $(document).ready(function () {
 					position: e.latlng
 				};
 
-				setCookie(cookie, JSON.stringify(userData));
-				ref.push(userData, (function(e){
+				setCookie(passenger, JSON.stringify(userData));
+				ref.push(userData, function(e){
 					console.log("Event", e);
 					console.log("HasAdded", "Yes");
 				});
@@ -111,8 +111,8 @@ $(document).ready(function () {
 
 	var myIcon = L.divIcon({className: 'my-div-icon'});
 
-	if ( getCookie(cookie) ){
-		var userData = JSON.parse( getCookie(cookie) );
+	if ( getCookie(passenger) ){
+		var userData = JSON.parse( getCookie(passenger) );
 		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
 		var cnt;
@@ -125,7 +125,7 @@ $(document).ready(function () {
 	});*/
 
 	// Workin whith main menu buttons
-	$(driverLink).on("click", (function(event){
+	/*$(driverLink).on("click", (function(event){
 		if ( getCookie(driver) ) {
 			return;
 		} else {
@@ -133,5 +133,5 @@ $(document).ready(function () {
 
 		}
 		event.preventDefault();
-	});
+	});*/
 });
