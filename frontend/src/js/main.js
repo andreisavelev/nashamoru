@@ -215,7 +215,7 @@ $(document).ready(function () {
 				  
 
 
-					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
 						.bindPopup("<div> Привет </div>", {className: childData.id})
 				  	  	.addTo(map));
 
@@ -242,7 +242,18 @@ $(document).ready(function () {
 					
 				}
 			}
-		})
+		});
+
+		ref.on('child_added', function (childSnapshot, prevChildKey) {
+			// foreach for child element 'shamora'
+			var key = childSnapshot.key();
+			// childData will be the actual contents of the child
+			var newData = childSnapshot.val();
+
+			marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon, draggable: true })
+				.bindPopup("<div> Я новенький </div>", {className: newData.id})
+				.addTo(map))
+		});
 	}
 
 	var cnt;
@@ -254,10 +265,9 @@ $(document).ready(function () {
 		
 		for(i=0;i<marker.length;i++) {
 			map.removeLayer(marker[i]);
-		}  
-		e.preventDefault();
+		}
 
-		
+		deleteCookie(driver);
 
 		/*$('.my-div-icon').remove();*/
 		map.removeLayer(markers);
@@ -291,6 +301,132 @@ $(document).ready(function () {
 		} else {
 			map.off('click');
 		}
+
+		e.preventDefault();
+	});
+
+	$(driverLink).on('click', function (e) {
+		if (getCookie(passenger)) {
+			deleteCookie(passenger);
+
+			/*for(i=0;i<marker.length;i++) {
+				map.removeLayer(marker[i]);
+			}*/
+
+			setCookie(driver, true);
+
+			/* checkout to driver and get all data */
+			ref.once("value", function(snapshot) {
+			
+				console.log("DROW INVALID POEOPLE");
+
+				snapshot.forEach(function(childSnapshot) {
+
+						// foreach for child element 'shamora'
+						var key = childSnapshot.key();
+						// childData will be the actual contents of the child
+						var childData = childSnapshot.val();
+					  
+
+
+						marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
+							.bindPopup("<div> Привет </div>", {className: childData.id})
+					  	  	.addTo(map));
+
+				  });
+			  
+			});
+
+			ref.on('child_changed', function (childSnapshot, prevChildKey) {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
+
+				for (var i =0; i < marker.length; i++) {
+					if ( marker[i]._popup.options.className === childData.id ) {
+						map.removeLayer(marker[i]);
+						console.log("Yes", marker[i]);
+
+						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
+							.bindPopup("<div> Пока! </div>", {className: childData.id})
+					  	  	.addTo(map)
+					} else {
+						
+					}
+				}
+			});
+
+			ref.on('child_added', function (childSnapshot, prevChildKey) {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var newData = childSnapshot.val();
+
+				marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon})
+					.bindPopup("<div> Я новенький </div>", {className: newData.id})
+					.addTo(map))
+			});
+
+		} else if (getCookie(driver)) {
+			return;
+		} else {
+			setCookie(driver, true);
+
+			/* checkout to driver and get all data */
+			ref.once("value", function(snapshot) {
+			
+				console.log("DROW INVALID POEOPLE");
+
+				snapshot.forEach(function(childSnapshot) {
+
+						// foreach for child element 'shamora'
+						var key = childSnapshot.key();
+						// childData will be the actual contents of the child
+						var childData = childSnapshot.val();
+					  
+
+
+						marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+							.bindPopup("<div> Привет </div>", {className: childData.id})
+					  	  	.addTo(map));
+
+				  });
+			  
+			});
+
+			ref.on('child_changed', function (childSnapshot, prevChildKey) {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
+
+				for (var i =0; i < marker.length; i++) {
+					if ( marker[i]._popup.options.className === childData.id ) {
+						map.removeLayer(marker[i]);
+						console.log("Yes", marker[i]);
+
+						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+							.bindPopup("<div> Пока! </div>", {className: childData.id})
+					  	  	.addTo(map)
+					} else {
+						
+					}
+				}
+			});
+
+			ref.on('child_added', function (childSnapshot, prevChildKey) {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var newData = childSnapshot.val();
+
+				marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon, draggable: true })
+					.bindPopup("<div> Я новенький </div>", {className: newData.id})
+					.addTo(map))
+			});
+		}
+
 
 		e.preventDefault();
 	});
