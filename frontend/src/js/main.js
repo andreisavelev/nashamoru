@@ -1,5 +1,6 @@
+var map = L.map('js-map').setView([43.121, 131.923], 13);
 $(document).ready(function () {
-	var map = L.map('js-map').setView([43.121, 131.923], 13);
+	
 
 	// Connect to firebase
 	var ref = new Firebase('https://toshamora.firebaseio.com/nashamoru/');
@@ -137,9 +138,28 @@ $(document).ready(function () {
 			L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 		});
 	} else {
+<<<<<<< HEAD
+		/* checkout to driver and get all data */
+		ref.on("value", function(snapshot) {
+	 
+		snapshot.forEach(function(childSnapshot) {
+				  // foreach for child element 'shamora'
+				  var key = childSnapshot.key();
+				  // childData will be the actual contents of the child
+				  var childData = childSnapshot.val();
+
+				  console.log("KEY", key);
+				  console.log("chaldData", childData.position.lat);
+				  
+				  L.marker([childData.position.lat, childData.position.lng], {icon: myIcon}).addTo(map);
+			  });
+		  
+		});
+=======
 		var cnt;
 		setIcon(cnt);
 		cnt = 1;
+>>>>>>> b2355fae39a5a61cdc1889d582ba1e37278e53a4
 	}
 
 });
