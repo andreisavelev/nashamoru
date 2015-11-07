@@ -2,7 +2,7 @@ $(document).ready(function () {
 	var map = L.map('js-map').setView([43.121, 131.923], 13);
 
 	// Connect to firebase
-	var ref = new Firebase('toshamora.firebaseio.com');
+	var ref = new Firebase('https://toshamora.firebaseio.com/nashamoru/');
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -113,8 +113,6 @@ $(document).ready(function () {
 
 	if ( getCookie(cookie) ){
 		var userData = JSON.parse( getCookie(cookie) );
-
-		console.log(getCookie(cookie));
 		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
 		var cnt;
