@@ -1,5 +1,6 @@
+var map = L.map('js-map').setView([43.121, 131.923], 13);
 $(document).ready(function () {
-	var map = L.map('js-map').setView([43.121, 131.923], 13);
+	
 
 	// Connect to firebase
 	var ref = new Firebase('https://toshamora.firebaseio.com/nashamoru/');
@@ -116,8 +117,22 @@ $(document).ready(function () {
 		console.log(userData);
 		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
-		var cnt;
-		setIcon(cnt);
+		/* checkout to driver and get all data */
+		ref.on("value", function(snapshot) {
+	 
+		snapshot.forEach(function(childSnapshot) {
+				  // foreach for child element 'shamora'
+				  var key = childSnapshot.key();
+				  // childData will be the actual contents of the child
+				  var childData = childSnapshot.val();
+
+				  console.log("KEY", key);
+				  console.log("chaldData", childData.position.lat);
+				  
+				  L.marker([childData.position.lat, childData.position.lng], {icon: myIcon}).addTo(map);
+			  });
+		  
+		});
 	}
 
 	/*map.on('click', function (e) {
