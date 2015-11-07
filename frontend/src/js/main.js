@@ -113,7 +113,7 @@ $(document).ready(function () {
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
-		consoel.log(userData);
+		console.log(userData);
 		L.marker([userData.position.lat.toFixed(3), userData.position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
 	} else {
 		var cnt;
