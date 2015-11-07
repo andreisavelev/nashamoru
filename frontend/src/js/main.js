@@ -11,13 +11,20 @@ $(document).ready(function () {
 		accessToken: 'pk.eyJ1Ijoic2F2ZWxldmNvcnIiLCJhIjoiY2llem5heHA2MDBxNHQ0bTRsMW55eXdjbiJ9.lgwTaEKIr1Fxc-L57JRFOQ'
 	}).addTo(map);
 
-	var cookie = "psg";
+	// Variables for cookies
+	var passenger = "psg";
+	var driver = "drvr";
 
 	var cookieOptions = {
 		expire: 3600,
 		path: '/',
 		secure: false
 	};
+
+	//Caching jq elements
+	var driverLink = $(".js-driver-link");
+	var passengerLink = $(".js-passenger-link");
+
 
 	/**
 	 * Get Cookie by name
@@ -66,6 +73,12 @@ $(document).ready(function () {
 		document.cookie = updatedCookie;
 	};
 
+	var deleteCookie = function (name) {
+	  setCookie(name, "", {
+	    expires: -1
+	  });
+	};
+
 	/**
 	*
 	* return {number}
@@ -74,6 +87,9 @@ $(document).ready(function () {
 		return Math.floor((Math.random() * 100))
 	};
 
+	/**
+	* 
+	*/
 	var setIcon = function (cnt) {
 		if(cnt !== 1) {
 			map.on('click', function (e) {
@@ -84,7 +100,10 @@ $(document).ready(function () {
 				};
 
 				setCookie(cookie, JSON.stringify(userData));
-				ref.set(userData);
+				ref.push(userData, (function(e){
+					console.log("Event", e);
+					console.log("HasAdded", "Yes");
+				});
 			});
 		}
 		cnt = 1;
@@ -102,8 +121,19 @@ $(document).ready(function () {
 		setIcon(cnt);
 	}
 
-	map.on('click', function (e) {
+	/*map.on('click', function (e) {
 		L.marker([e.latlng.lat, e.latlng.lng], {icon: myIcon}).addTo(map);
 		console.log(myIcon);
+	});*/
+
+	// Workin whith main menu buttons
+	$(driverLink).on("click", (function(event){
+		if ( getCookie(driver) ) {
+			return;
+		} else {
+			deleteCookie(passenger);
+
+		}
+		event.preventDefault();
 	});
 });
