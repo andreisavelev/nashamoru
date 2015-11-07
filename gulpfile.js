@@ -58,4 +58,22 @@ gulp.task('watch', function () {
 	gulp.watch(['./frontend/src/*.html', './frontend/src/js/*.js', './frontend/src/css/*.less'], ['js', 'less', 'html']);
 });
 
+gulp.task('compcss', function () {
+	return gulp.src('./frontend/src/css/style.css')
+		.pipe(gulp.dest('./frontend/app/css/'));
+});
+
+gulp.task('compjs', function () {
+	return gulp.src('./frontend/src/js/*.js')
+		.pipe(min())
+		.pipe(gulp.dest('./frontend/app/js/'));
+});
+
+gulp.task('comphtml', function () {
+	return gulp.src('./frontend/src/*.html')
+		.pipe(gulp.dest('./frontend/app/'));
+});
+
+gulp.task('compile', ['compcss', 'compjs', 'comphtml']);
+
 gulp.task('default', ['scripts', 'leafletimg', 'less', 'bootstrapfont', 'connect', 'watch']);

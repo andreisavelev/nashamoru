@@ -151,7 +151,7 @@ $(document).ready(function () {
 		map.removeLayer(that);
 	};
 
-	var myIcon = L.divIcon({className: 'my-div-icon'});
+	var myIcon = L.divIcon({className: 'my-div-icon', iconSize: L.point(32, 32)});
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
@@ -162,15 +162,12 @@ $(document).ready(function () {
 			console.log(marker._leaflet_id);
 		});
 	} else {
-<<<<<<< HEAD
-=======
-
->>>>>>> 3c032262df68e16c1c8a40c21d69c871590cc447
 		/* checkout to driver and get all data */
 		/* test comment */ 
 		ref.on("value", function(snapshot) {
 	 
 		snapshot.forEach(function(childSnapshot) {
+
 				  // foreach for child element 'shamora'
 				  var key = childSnapshot.key();
 				  // childData will be the actual contents of the child
@@ -179,24 +176,15 @@ $(document).ready(function () {
 				  console.log("KEY", key);
 				  console.log("chaldData", childData.position.lat);
 				  
-				  L.marker([childData.position.lat, childData.position.lng], {
+				  L.marker(new L.LatLng(), {
 				  icon: myIcon				  
 				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map);
 			  });
 		  
 		});
-<<<<<<< HEAD
-=======
-
->>>>>>> 3c032262df68e16c1c8a40c21d69c871590cc447
 	}
 
 	$(passengerLink).on('click', function (e) {
 
-		var markers = new L.FeatureGroup();
-		//
-		e.preventDefault();
-
 	});
-
 });
