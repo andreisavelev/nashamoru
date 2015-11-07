@@ -96,6 +96,37 @@ $(document).ready(function () {
 			L.marker([position.lat, position.lng], {icon: myIcon}).addTo(map);
 	};
 
+	// update geo and bio info to database
+	var updateUserData = function (id, newData, callback) {
+		var key,
+			data;
+		ref.once("value", function(snapshot) {
+			return snapshot.forEach(function(childSnapshot) {
+				key =  childSnapshot.key()
+				data = childSnapshot.val();
+
+			    if (data.id === id) {
+			    	console.log(key);
+			    	/*ref.update({key: {position: newData}}, function (error) {
+			    		if(error) {
+			    			console.log(error);
+			    		} else {
+			    			console.log("Updated")
+			    		}
+			    	});*/
+					ref.child(key).set({"id": data.id, position: newData}, function (error) {
+			    		if(error) {
+			    			console.log(error);
+			    		} else {
+			    			console.log("Updated")
+			    		}
+			    	});
+			    }
+
+			});
+		});
+	};
+
 	// Save geo and bio info to database
 	var saveUserData = function (data, callback) {
 		return ref.push(data, callback());
@@ -105,12 +136,28 @@ $(document).ready(function () {
 		var data,
 	    	position;
 
-		ref.on("value", function(snapshot) {
+		ref.once("value", function(snapshot) {
 			return snapshot.forEach(function(childSnapshot) {
 			   data = childSnapshot.val();
 
 			    if (data.id === id) {
 			    	callback(data.position);
+			    }
+
+			});
+		});
+	};
+
+	var updateForDraivers = function (id, callback) {
+		var data,
+	    	position;
+
+		ref.once("value", function(snapshot) {
+			return snapshot.forEach(function(childSnapshot) {
+			   data = childSnapshot.val();
+
+			    if (data.id === id) {
+			    	callback(data);
 			    }
 
 			});
@@ -131,42 +178,74 @@ $(document).ready(function () {
 	};
 
 	// Create icon template
-	var myIcon = L.divIcon({className: 'my-div-icon', iconSize: L.point(32, 32)});
+	var iconId = getCookie(passenger);
+	var myIcon = L.divIcon({className: 'my-div-icon',  iconSize: L.point(32, 32)});
 	var marker=[];
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
+
 		console.log(userData.id);
-		getUserData(userData.id, function (position) {
 
-			var marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon});
-			markers.addLayer(marker);
-			/*.on('click', setNewPlace);*/
+		var currentMarker = getUserData(userData.id, function (position) {
 
+			myIcon.id = userData.id;
+
+			console.log("getuserData called");
+			currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
+			currentMarker.on('dragend', function (e) {
+				var newData = e.target._latlng;
+				updateUserData(userData.id, newData);
+			});
 		});
+
 
 		console.log("WE HAVE COOKIE");
 	} else {
+		
 		/* checkout to driver and get all data */
-		ref.on("value", function(snapshot) {
+		ref.once("value", function(snapshot) {
 		
-		
-		
-		snapshot.forEach(function(childSnapshot) {
+			console.log("DROW INVALID POEOPLE");
 
-				  // foreach for child element 'shamora'
-				  var key = childSnapshot.key();
-				  // childData will be the actual contents of the child
-				  var childData = childSnapshot.val();
+			snapshot.forEach(function(childSnapshot) {
+
+					// foreach for child element 'shamora'
+					var key = childSnapshot.key();
+					// childData will be the actual contents of the child
+					var childData = childSnapshot.val();
 				  
 
-				  marker.push(L.marker([childData.position.lat, childData.position.lng], {
-				  icon: myIcon				  
-				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map));
+
+					marker.push(L.marker([childData.position.lat, childData.position.lng], {
+				  		icon: myIcon
+				  	}).bindPopup("<div> Привет </div>", {className: childData.id})
+				  	  .addTo(map));
 
 			  });
 		  
 		});
+
+
+		ref.on('child_changed', function (childSnapshot, prevChildKey) {
+			// foreach for child element 'shamora'
+			var key = childSnapshot.key();
+			// childData will be the actual contents of the child
+			var childData = childSnapshot.val();
+
+			for (var i =0; i < marker.length; i++) {
+				if ( marker[i]._popup.options.className === childData.id ) {
+					map.removeLayer(marker[i]);
+					console.log("Yes", marker[i]);
+
+					marker[i] = L.marker([childData.position.lat, childData.position.lng], { icon: myIcon })
+						.bindPopup("<div> Пока! </div>", {className: childData.id})
+				  	  	.addTo(map)
+				} else {
+					
+				}
+			}
+		})
 	}
 
 	var cnt;
