@@ -14,6 +14,8 @@ $(document).ready(function () {
 		accessToken: 'pk.eyJ1Ijoic2F2ZWxldmNvcnIiLCJhIjoiY2llem5heHA2MDBxNHQ0bTRsMW55eXdjbiJ9.lgwTaEKIr1Fxc-L57JRFOQ'
 	}).addTo(map);
 
+	var markers = new L.FeatureGroup();
+
 	// Variables for cookies
 	var passenger = "psg";
 	var driver = "drvr";
@@ -89,25 +91,14 @@ $(document).ready(function () {
 		return Math.floor((Math.random() * 10000))
 	};
 
-	/**
-	* 
-	*/
-	var setIcon = function (cnt) {
-		if(cnt !== 1) {
-			map.on('click', function (e) {
-				L.marker([e.latlng.lat, e.latlng.lng], {icon: myIcon}).addTo(map);
-				var userData = {
-					id: generateUserId(),
-					position: e.latlng
-				};
+	// Set icom on the map by click
+	var setIcon = function (position) {
+			L.marker([position.lat, position.lng], {icon: myIcon}).addTo(map);
+	};
 
-				setCookie(passenger, JSON.stringify(userData));
-				return ref.push(userData, function(e){
-					console.log("HasAdded", "Yes");
-				});
-			});
-		}
-		cnt = 1;
+	// Save geo and bio info to database
+	var saveUserData = function (data, callback) {
+		return ref.push(data, callback());
 	};
 
 	var getUserData = function (id, callback) {
@@ -119,7 +110,7 @@ $(document).ready(function () {
 			   data = childSnapshot.val();
 
 			    if (data.id === id) {
-			    	callback(JSON.parse(data.position));
+			    	callback(data.position);
 			    }
 
 			});
@@ -129,19 +120,7 @@ $(document).ready(function () {
 	// getting all the markers at once
 	var getAllMarkers = function () {
 
-	    var allMarkersObjArray = []; // for marker objects
-	    var allMarkersGeoJsonArray = []; // for readable geoJson markers
-
-	    $.each(map._layers, function (ml) {
-
-	        if (map._layers[ml].feature) {
-
-	            allMarkersObjArray.push(this)
-	            allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
-	        }
-
-	        console.log(allMarkersObjArray);
-	    })
+	    map.removeLayer(markers);
 
 	}
 
@@ -157,15 +136,18 @@ $(document).ready(function () {
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
+		console.log(userData.id);
 		getUserData(userData.id, function (position) {
-			marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
-			.addTo(map)
-			.on('click', setNewPlace);
-			console.log(marker._leaflet_id);
+
+			var marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon});
+			markers.addLayer(marker);
+			/*.on('click', setNewPlace);*/
+
 		});
+
+		console.log("WE HAVE COOKIE");
 	} else {
 		/* checkout to driver and get all data */
-		/* test comment */ 
 		ref.on("value", function(snapshot) {
 		
 		
@@ -176,20 +158,21 @@ $(document).ready(function () {
 				  var key = childSnapshot.key();
 				  // childData will be the actual contents of the child
 				  var childData = childSnapshot.val();
-
-				  console.log("KEY", key);
-				  console.log("chaldData", childData.position.lat);
 				  
+
 				  marker.push(L.marker([childData.position.lat, childData.position.lng], {
 				  icon: myIcon				  
 				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map));
+
 			  });
 		  
 		});
 	}
 
+	var cnt;
 	// Remove all icons from map
 	$(passengerLink).on('click', function (e) {
+
 		var allMarkers = L.layerGroup(marker);
 		console.log(allMarkers);
 		
@@ -197,6 +180,37 @@ $(document).ready(function () {
 			map.removeLayer(marker[i]);
 		}  
 		e.preventDefault();
+
 		
+
+		/*$('.my-div-icon').remove();*/
+		map.removeLayer(markers);
+		
+		setCookie(passenger, JSON.stringify({"id": generateUserId()}));
+
+
+		if(typeof cnt === 'undefined') {
+			map.once('click', function (e) {
+				var position = e.latlng;
+				var userId = JSON.parse( getCookie(passenger) )
+				var userData = {
+					"id":  userId.id,
+					"position": position
+				}
+
+				setIcon(position);
+				saveUserData(userData, function () {
+					console.log("SEAVED");
+				});
+			});
+
+			cnt = 1;
+
+			console.log("IN THE IF STATEMENT", cnt);
+		} else {
+			map.off('click');
+		}
+
+		e.preventDefault();
 	});
 });
