@@ -93,7 +93,7 @@ $(document).ready(function () {
 
 	// Set icom on the map by click
 	var setIcon = function (position) {
-			L.marker([position.lat, position.lng], {icon: myIcon}).addTo(map);
+			return L.marker([position.lat, position.lng], {icon: myIcon, draggable: true }).addTo(map);
 	};
 
 	// update geo and bio info to database
@@ -189,8 +189,6 @@ $(document).ready(function () {
 
 		var currentMarker = getUserData(userData.id, function (position) {
 
-			myIcon.id = userData.id;
-
 			console.log("getuserData called");
 			currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
 			currentMarker.on('dragend', function (e) {
@@ -217,10 +215,9 @@ $(document).ready(function () {
 				  
 
 
-					marker.push(L.marker([childData.position.lat, childData.position.lng], {
-				  		icon: myIcon
-				  	}).bindPopup("<div> Привет </div>", {className: childData.id})
-				  	  .addTo(map));
+					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+						.bindPopup("<div> Привет </div>", {className: childData.id})
+				  	  	.addTo(map));
 
 			  });
 		  
@@ -238,7 +235,7 @@ $(document).ready(function () {
 					map.removeLayer(marker[i]);
 					console.log("Yes", marker[i]);
 
-					marker[i] = L.marker([childData.position.lat, childData.position.lng], { icon: myIcon })
+					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
 						.bindPopup("<div> Пока! </div>", {className: childData.id})
 				  	  	.addTo(map)
 				} else {
@@ -277,9 +274,14 @@ $(document).ready(function () {
 					"position": position
 				}
 
-				setIcon(position);
+				var newIcon = setIcon(position);
 				saveUserData(userData, function () {
 					console.log("SEAVED");
+				});
+
+				newIcon.on('dragend', function (e) {
+					var newData = e.target._latlng;
+					updateUserData(userId.id, newData);
 				});
 			});
 
