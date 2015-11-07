@@ -162,7 +162,12 @@ $(document).ready(function () {
 			console.log(marker._leaflet_id);
 		});
 	} else {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3c032262df68e16c1c8a40c21d69c871590cc447
 		/* checkout to driver and get all data */
+		/* test comment */ 
 		ref.on("value", function(snapshot) {
 	 
 		snapshot.forEach(function(childSnapshot) {
@@ -174,10 +179,16 @@ $(document).ready(function () {
 				  console.log("KEY", key);
 				  console.log("chaldData", childData.position.lat);
 				  
-				  L.marker([childData.position.lat, childData.position.lng], {icon: myIcon}).addTo(map);
+				  L.marker([childData.position.lat, childData.position.lng], {
+				  icon: myIcon				  
+				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map);
 			  });
 		  
 		});
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3c032262df68e16c1c8a40c21d69c871590cc447
 	}
 
 	$(passengerLink).on('click', function (e) {
