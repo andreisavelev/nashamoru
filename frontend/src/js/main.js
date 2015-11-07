@@ -215,8 +215,9 @@ $(document).ready(function () {
 				  
 
 
-					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
-						.bindPopup("<div> Привет </div>", {className: childData.id})
+
+					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+						.bindPopup("<div>"+ childData.bio +"</div>", {className: childData.id})
 				  	  	.addTo(map));
 
 			  });
@@ -273,21 +274,44 @@ $(document).ready(function () {
 		map.removeLayer(markers);
 		
 		setCookie(passenger, JSON.stringify({"id": generateUserId()}));
-
+		
+		var formData;
+		
+			
 
 		if(typeof cnt === 'undefined') {
 			map.once('click', function (e) {
-				var position = e.latlng;
+			
+			var position = e.latlng;
 				var userId = JSON.parse( getCookie(passenger) )
-				var userData = {
-					"id":  userId.id,
-					"position": position
-				}
+				var userData;
+			
+			
+				/* modal when seaved lgt data*/
+				$('#userinfo').modal('show');
+				$('#userinfo').on('shown.bs.modal', function (event) {
+					$( "#userinfoform" ).on( "submit", function( event ) {
+						  $('#userinfo').modal('hide');
+						  formData = $( this ).serializeArray();
+						  event.preventDefault();
+						 userData = {								
+							"id":  userId.id,
+							"position": position,
+							"bio": JSON.stringify(formData)				
+						 };
+						 saveUserData(userData, function () {
+						  console.log("SEAVED", userId.id);
+						});
+					});
+					
+				});
+			
+				
 
 				var newIcon = setIcon(position);
-				saveUserData(userData, function () {
-					console.log("SEAVED");
-				});
+				//saveUserData(userData, function () {
+					//console.log("SEAVED", userId.id);
+				//});
 
 				newIcon.on('dragend', function (e) {
 					var newData = e.target._latlng;
