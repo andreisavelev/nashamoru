@@ -153,11 +153,12 @@ $(document).ready(function () {
 
 	// Create icon template
 	var myIcon = L.divIcon({className: 'my-div-icon', iconSize: L.point(32, 32)});
+	var marker=[];
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
 		getUserData(userData.id, function (position) {
-			var marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
+			marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
 			.addTo(map)
 			.on('click', setNewPlace);
 			console.log(marker._leaflet_id);
@@ -166,7 +167,9 @@ $(document).ready(function () {
 		/* checkout to driver and get all data */
 		/* test comment */ 
 		ref.on("value", function(snapshot) {
-	 
+		
+		
+		
 		snapshot.forEach(function(childSnapshot) {
 
 				  // foreach for child element 'shamora'
@@ -177,9 +180,9 @@ $(document).ready(function () {
 				  console.log("KEY", key);
 				  console.log("chaldData", childData.position.lat);
 				  
-				  L.marker([childData.position.lat, childData.position.lng], {
+				  marker.push(L.marker([childData.position.lat, childData.position.lng], {
 				  icon: myIcon				  
-				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map);
+				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map));
 			  });
 		  
 		});
@@ -187,7 +190,13 @@ $(document).ready(function () {
 
 	// Remove all icons from map
 	$(passengerLink).on('click', function (e) {
-		$('.my-div-icon').remove();
+		var allMarkers = L.layerGroup(marker);
+		console.log(allMarkers);
+		
+		for(i=0;i<marker.length;i++) {
+			map.removeLayer(marker[i]);
+		}  
+		e.preventDefault();
 		
 	});
 });
