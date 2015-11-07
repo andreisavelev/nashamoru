@@ -132,21 +132,26 @@ $(document).ready(function () {
 
 	// Create icon template
 	var myIcon = L.divIcon({className: 'my-div-icon', iconSize: L.point(32, 32)});
+	var marker=[];
 
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
 		console.log(userData.id);
 		getUserData(userData.id, function (position) {
+
 			var marker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon});
 			markers.addLayer(marker);
 			/*.on('click', setNewPlace);*/
+
 		});
 
 		console.log("WE HAVE COOKIE");
 	} else {
 		/* checkout to driver and get all data */
 		ref.on("value", function(snapshot) {
-	 
+		
+		
+		
 		snapshot.forEach(function(childSnapshot) {
 
 				  // foreach for child element 'shamora'
@@ -154,9 +159,11 @@ $(document).ready(function () {
 				  // childData will be the actual contents of the child
 				  var childData = childSnapshot.val();
 				  
-				  L.marker([childData.position.lat, childData.position.lng], {
-				  icon: myIcon
-				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map);
+
+				  marker.push(L.marker([childData.position.lat, childData.position.lng], {
+				  icon: myIcon				  
+				  }).bindPopup("<div>"+ childData.id +"</div>").addTo(map));
+
 			  });
 		  
 		});
@@ -165,6 +172,15 @@ $(document).ready(function () {
 	var cnt;
 	// Remove all icons from map
 	$(passengerLink).on('click', function (e) {
+
+		var allMarkers = L.layerGroup(marker);
+		console.log(allMarkers);
+		
+		for(i=0;i<marker.length;i++) {
+			map.removeLayer(marker[i]);
+		}  
+		e.preventDefault();
+
 		
 
 		/*$('.my-div-icon').remove();*/
