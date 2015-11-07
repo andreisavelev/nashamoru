@@ -1,5 +1,6 @@
-var map = L.map('js-map').setView([43.121, 131.923], 13);
 $(document).ready(function () {
+	
+	var map = L.map('js-map').setView([43.121, 131.923], 13);
 	
 
 	// Connect to firebase
@@ -26,7 +27,6 @@ $(document).ready(function () {
 	//Caching jq elements
 	var driverLink = $(".js-driver-link");
 	var passengerLink = $(".js-passenger-link");
-
 
 	/**
 	 * Get Cookie by name
@@ -86,7 +86,7 @@ $(document).ready(function () {
 	* return {number}
 	*/
 	var generateUserId = function () {
-		return Math.floor((Math.random() * 100))
+		return Math.floor((Math.random() * 10000))
 	};
 
 	/**
@@ -112,14 +112,14 @@ $(document).ready(function () {
 
 	var getUserData = function (id, callback) {
 		var data,
-	    position;
+	    	position;
 
 		ref.on("value", function(snapshot) {
 			return snapshot.forEach(function(childSnapshot) {
 			   data = childSnapshot.val();
 
 			    if (data.id === id) {
-			    	callback(data.position);
+			    	callback(JSON.parse(data.position));
 			    }
 
 			});
@@ -127,7 +127,7 @@ $(document).ready(function () {
 	};
 
 	var setNewPlace = function (e) {
-		conso
+		var currentPosition = e.latlng;
 	};
 
 	var myIcon = L.divIcon({className: 'my-div-icon'});
@@ -135,10 +135,11 @@ $(document).ready(function () {
 	if ( getCookie(passenger) ){
 		var userData = JSON.parse( getCookie(passenger) );
 		getUserData(userData.id, function (position) {
-			L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon}).addTo(map);
+			var currentPos = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon})
+			.addTo(map)
+			.on('click', setNewPlace);
 		});
 	} else {
-<<<<<<< HEAD
 		/* checkout to driver and get all data */
 		ref.on("value", function(snapshot) {
 	 
@@ -155,11 +156,6 @@ $(document).ready(function () {
 			  });
 		  
 		});
-=======
-		var cnt;
-		setIcon(cnt);
-		cnt = 1;
->>>>>>> b2355fae39a5a61cdc1889d582ba1e37278e53a4
 	}
 
 });
