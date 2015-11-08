@@ -107,13 +107,7 @@ $(document).ready(function () {
 
 			    if (data.id === id) {
 			    	console.log(key);
-			    	/*ref.update({key: {position: newData}}, function (error) {
-			    		if(error) {
-			    			console.log(error);
-			    		} else {
-			    			console.log("Updated")
-			    		}
-			    	});*/
+			    	
 					ref.child(key).set({"id": data.id, position: newData, bio: data.bio}, function (error) {
 			    		if(error) {
 			    			console.log(error);
@@ -378,9 +372,9 @@ $(document).ready(function () {
 			ref.once("value", function(snapshot) {
 			
 				// foreach for child element 'shamora'
-				var key = childSnapshot.key();
+				var key = snapshot.key();
 				// childData will be the actual contents of the child
-				var childData = childSnapshot.val();
+				var childData = snapshot.val();
 			  
 				if(typeof childData.bio !== 'undefined') {
 					var tempData = JSON.parse(childData.bio);
@@ -400,11 +394,11 @@ $(document).ready(function () {
 			  
 			});
 
-			ref.on('child_changed', function (childSnapshot, prevChildKey) {
+			ref.on('child_changed', function (snapshot, prevChildKey) {
 				// foreach for child element 'shamora'
-				var key = childSnapshot.key();
+				var key = snapshot.key();
 				// childData will be the actual contents of the child
-				var childData = childSnapshot.val();
+				var childData = snapshot.val();
 
 				for (var i =0; i < marker.length; i++) {
 					if ( marker[i]._popup.options.className === childData.id ) {
