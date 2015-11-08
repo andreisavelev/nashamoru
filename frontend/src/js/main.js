@@ -114,7 +114,7 @@ $(document).ready(function () {
 			    			console.log("Updated")
 			    		}
 			    	});*/
-					ref.child(key).set({"id": data.id, position: newData}, function (error) {
+					ref.child(key).set({"id": data.id, position: newData, bio: data.bio}, function (error) {
 			    		if(error) {
 			    			console.log(error);
 			    		} else {
