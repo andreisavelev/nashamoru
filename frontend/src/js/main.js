@@ -271,10 +271,23 @@ $(document).ready(function () {
 			// foreach for child element 'shamora'
 			var key = childSnapshot.key();
 			// childData will be the actual contents of the child
-			var newData = childSnapshot.val();
+			var childData = childSnapshot.val();
 
-			marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon, draggable: true })
-				.bindPopup("<div> Я новенький </div>", {className: newData.id})
+			if(typeof childData.bio !== 'undefined') {
+				var tempData = JSON.parse(childData.bio);
+				var bioData = {};
+				for(var i = 0; i < tempData.length; i++) {
+					bioData[tempData[i].name] = tempData[i].value;
+				}
+			}
+			
+			console.log(bioData);
+			var src = $("#bio-template").html();
+			var template = Handlebars.compile( src );
+			var html = template(bioData);
+
+			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+				.bindPopup( html , {className: childData.id})
 				.addTo(map))
 		});
 	}
@@ -364,22 +377,26 @@ $(document).ready(function () {
 			/* checkout to driver and get all data */
 			ref.once("value", function(snapshot) {
 			
-				console.log("DROW INVALID POEOPLE");
-
-				snapshot.forEach(function(childSnapshot) {
-
-						// foreach for child element 'shamora'
-						var key = childSnapshot.key();
-						// childData will be the actual contents of the child
-						var childData = childSnapshot.val();
-					  
-
-
-						marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
-							.bindPopup("<div> Привет </div>", {className: childData.id})
-					  	  	.addTo(map));
-
-				  });
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
+			  
+				if(typeof childData.bio !== 'undefined') {
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var i = 0; i < tempData.length; i++) {
+						bioData[tempData[i].name] = tempData[i].value;
+					}
+				}
+				
+				console.log(bioData);
+				var src = $("#bio-template").html();
+				var template = Handlebars.compile( src );
+				var html = template(bioData); 
+				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+					.bindPopup("<div>"+ html +"</div>", {className: childData.id})
+			  	  	.addTo(map));
 			  
 			});
 
@@ -394,8 +411,21 @@ $(document).ready(function () {
 						map.removeLayer(marker[i]);
 						console.log("Yes", marker[i]);
 
-						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
-							.bindPopup("<div> Пока! </div>", {className: childData.id})
+						if(typeof childData.bio !== 'undefined') {
+							var tempData = JSON.parse(childData.bio);
+							var bioData = {};
+							for(var i = 0; i < tempData.length; i++) {
+								bioData[tempData[i].name] = tempData[i].value;
+							}
+						}
+						
+						console.log(bioData);
+						var src = $("#bio-template").html();
+						var template = Handlebars.compile( src );
+						var html = template(bioData);
+
+						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+							.bindPopup( html , {className: childData.id})
 					  	  	.addTo(map)
 					} else {
 						
@@ -407,10 +437,23 @@ $(document).ready(function () {
 				// foreach for child element 'shamora'
 				var key = childSnapshot.key();
 				// childData will be the actual contents of the child
-				var newData = childSnapshot.val();
+				var childData = childSnapshot.val();
 
-				marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon})
-					.bindPopup("<div> Я новенький </div>", {className: newData.id})
+				if(typeof childData.bio !== 'undefined') {
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var i = 0; i < tempData.length; i++) {
+						bioData[tempData[i].name] = tempData[i].value;
+					}
+				}
+				
+				console.log(bioData);
+				var src = $("#bio-template").html();
+				var template = Handlebars.compile( src );
+				var html = template(bioData);
+
+				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+					.bindPopup( html , {className: childData.id})
 					.addTo(map))
 			});
 
