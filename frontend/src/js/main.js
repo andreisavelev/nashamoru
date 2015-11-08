@@ -106,9 +106,9 @@ $(document).ready(function () {
 				data = childSnapshot.val();
 
 			    if (data.id === id) {
-			    	console.log(key);
+			    	console.log(data.bio);
 			    	
-					ref.child(key).set({"id": data.id, position: newData, bio: data.bio}, function (error) {
+					ref.child(key).set({"id": newData.id, position: newData.position, bio: data.bio}, function (error) {
 			    		if(error) {
 			    			console.log(error);
 			    		} else {
@@ -181,13 +181,13 @@ $(document).ready(function () {
 
 		console.log(userData.id);
 
-		var currentMarker = getUserData(userData.id, function (position) {
+		getUserData(userData.id, function (position) {
 
 			console.log("getuserData called");
-			currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
+			var currentMarker = currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
 			currentMarker.on('dragend', function (e) {
 				var newData = e.target._latlng;
-				updateUserData(userData.id, {id: userData.id, position: newData, bio: userData.bio});
+				updateUserData(userData.id, {id: userData.id, position: newData});
 			});
 		});
 
@@ -219,7 +219,7 @@ $(document).ready(function () {
 					var src = $("#bio-template").html();
 					var template = Handlebars.compile( src );
 					var html = template(bioData); 
-					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
 						.bindPopup("<div>"+ html +"</div>", {className: childData.id})
 				  	  	.addTo(map));
 
@@ -237,22 +237,19 @@ $(document).ready(function () {
 			for (var i =0; i < marker.length; i++) {
 				if ( marker[i]._popup.options.className === childData.id ) {
 					map.removeLayer(marker[i]);
-					console.log("Yes", marker[i]);
 
-					if(typeof childData.bio !== 'undefined') {
-						var tempData = JSON.parse(childData.bio);
-						var bioData = {};
-						for(var i = 0; i < tempData.length; i++) {
-							bioData[tempData[i].name] = tempData[i].value;
-						}
+					
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var y = 0; y < tempData.length; y++) {
+						bioData[tempData[y].name] = tempData[y].value;
 					}
 					
-					console.log(bioData);
 					var src = $("#bio-template").html();
 					var template = Handlebars.compile( src );
 					var html = template(bioData);
 
-					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
 						.bindPopup( html , {className: childData.id})
 				  	  	.addTo(map)
 				} else {
@@ -280,7 +277,7 @@ $(document).ready(function () {
 			var template = Handlebars.compile( src );
 			var html = template(bioData);
 
-			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
+			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
 				.bindPopup( html , {className: childData.id})
 				.addTo(map))
 		});
@@ -308,7 +305,7 @@ $(document).ready(function () {
 		
 			
 
-		if(typeof cnt === 'undefined') {
+		
 			map.once('click', function (e) {
 			
 			var position = e.latlng;
@@ -335,12 +332,9 @@ $(document).ready(function () {
 					
 				});
 			
-				
 
 				var newIcon = setIcon(position);
-				//saveUserData(userData, function () {
-					//console.log("SEAVED", userId.id);
-				//});
+				
 
 				newIcon.on('dragend', function (e) {
 					var newData = e.target._latlng;
@@ -351,165 +345,100 @@ $(document).ready(function () {
 			cnt = 1;
 
 			console.log("IN THE IF STATEMENT", cnt);
-		} else {
-			map.off('click');
-		}
 
 		e.preventDefault();
 	});
 
 	$(driverLink).on('click', function (e) {
-		if (getCookie(passenger)) {
-			deleteCookie(passenger);
 
-			/*for(i=0;i<marker.length;i++) {
-				map.removeLayer(marker[i]);
-			}*/
+		deleteCookie(passenger);
 
-			setCookie(driver, true);
+		ref.off('child_changed');
+		ref.off('child_added');
 
-			/* checkout to driver and get all data */
-			ref.once("value", function(snapshot) {
-			
-				// foreach for child element 'shamora'
-				var key = snapshot.key();
-				// childData will be the actual contents of the child
-				var childData = snapshot.val();
-			  
-				if(typeof childData.bio !== 'undefined') {
-					var tempData = JSON.parse(childData.bio);
-					var bioData = {};
-					for(var i = 0; i < tempData.length; i++) {
-						bioData[tempData[i].name] = tempData[i].value;
-					}
+		setCookie(driver, true);
+
+		/* checkout to driver and get all data */
+		ref.once("value", function(snapshot) {
+		
+			// foreach for child element 'shamora'
+			var key = snapshot.key();
+			// childData will be the actual contents of the child
+			var childData = snapshot.val();
+		  
+			if(typeof childData.bio !== 'undefined') {
+				var tempData = JSON.parse(childData.bio);
+				var bioData = {};
+				for(var i = 0; i < tempData.length; i++) {
+					bioData[tempData[i].name] = tempData[i].value;
 				}
-				
-				console.log(bioData);
-				var src = $("#bio-template").html();
-				var template = Handlebars.compile( src );
-				var html = template(bioData); 
-				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
-					.bindPopup("<div>"+ html +"</div>", {className: childData.id})
-			  	  	.addTo(map));
-			  
-			});
+			}
+			consoe.log()	
+			var src = $("#bio-template").html();
+			var template = Handlebars.compile( src );
+			var html = template(bioData); 
+			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
+				.bindPopup("<div>"+ html +"</div>", {className: childData.id})
+		  	  	.addTo(map));
+		  
+		});
 
-			ref.on('child_changed', function (snapshot, prevChildKey) {
-				// foreach for child element 'shamora'
-				var key = snapshot.key();
-				// childData will be the actual contents of the child
-				var childData = snapshot.val();
+		ref.on('child_changed', function (snapshot, prevChildKey) {
+			// foreach for child element 'shamora'
+			var key = snapshot.key();
+			// childData will be the actual contents of the child
+			var childData = snapshot.val();
 
-				for (var i =0; i < marker.length; i++) {
-					if ( marker[i]._popup.options.className === childData.id ) {
-						map.removeLayer(marker[i]);
-						console.log("Yes", marker[i]);
+			for (var i =0; i < marker.length; i++) {
+				if ( marker[i]._popup.options.className === childData.id ) {
+					map.removeLayer(marker[i]);
+					console.log("Yes", marker[i]);
 
-						if(typeof childData.bio !== 'undefined') {
-							var tempData = JSON.parse(childData.bio);
-							var bioData = {};
-							for(var i = 0; i < tempData.length; i++) {
-								bioData[tempData[i].name] = tempData[i].value;
-							}
+					if(typeof childData.bio !== 'undefined') {
+						var tempData = JSON.parse(childData.bio);
+						var bioData = {};
+						for(var y = 0; y < tempData.length; y++) {
+							bioData[tempData[y].name] = tempData[y].value;
 						}
-						
-						console.log(bioData);
-						var src = $("#bio-template").html();
-						var template = Handlebars.compile( src );
-						var html = template(bioData);
-
-						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
-							.bindPopup( html , {className: childData.id})
-					  	  	.addTo(map)
-					} else {
-						
 					}
+					
+					console.log(bioData);
+					var src = $("#bio-template").html();
+					var template = Handlebars.compile( src );
+					var html = template(bioData);
+
+					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+						.bindPopup( html , {className: childData.id})
+				  	  	.addTo(map)
+				} else {
+					
 				}
-			});
+			}
+		});
 
-			ref.on('child_added', function (childSnapshot, prevChildKey) {
-				// foreach for child element 'shamora'
-				var key = childSnapshot.key();
-				// childData will be the actual contents of the child
-				var childData = childSnapshot.val();
+		ref.on('child_added', function (childSnapshot, prevChildKey) {
+			// foreach for child element 'shamora'
+			var key = childSnapshot.key();
+			// childData will be the actual contents of the child
+			var childData = childSnapshot.val();
 
-				if(typeof childData.bio !== 'undefined') {
-					var tempData = JSON.parse(childData.bio);
-					var bioData = {};
-					for(var i = 0; i < tempData.length; i++) {
-						bioData[tempData[i].name] = tempData[i].value;
-					}
+			if(typeof childData.bio !== 'undefined') {
+				var tempData = JSON.parse(childData.bio);
+				var bioData = {};
+				for(var i = 0; i < tempData.length; i++) {
+					bioData[tempData[i].name] = tempData[i].value;
 				}
-				
-				console.log(bioData);
-				var src = $("#bio-template").html();
-				var template = Handlebars.compile( src );
-				var html = template(bioData);
-
-				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
-					.bindPopup( html , {className: childData.id})
-					.addTo(map))
-			});
-
-		} else if (getCookie(driver)) {
-			return;
-		} else {
-			setCookie(driver, true);
-
-			/* checkout to driver and get all data */
-			ref.once("value", function(snapshot) {
+			}
 			
-				console.log("DROW INVALID POEOPLE");
+			console.log(bioData);
+			var src = $("#bio-template").html();
+			var template = Handlebars.compile( src );
+			var html = template(bioData);
 
-				snapshot.forEach(function(childSnapshot) {
-
-						// foreach for child element 'shamora'
-						var key = childSnapshot.key();
-						// childData will be the actual contents of the child
-						var childData = childSnapshot.val();
-					  
-
-
-						marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
-							.bindPopup("<div> Привет </div>", {className: childData.id})
-					  	  	.addTo(map));
-
-				  });
-			  
-			});
-
-			ref.on('child_changed', function (childSnapshot, prevChildKey) {
-				// foreach for child element 'shamora'
-				var key = childSnapshot.key();
-				// childData will be the actual contents of the child
-				var childData = childSnapshot.val();
-
-				for (var i =0; i < marker.length; i++) {
-					if ( marker[i]._popup.options.className === childData.id ) {
-						map.removeLayer(marker[i]);
-						console.log("Yes", marker[i]);
-
-						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
-							.bindPopup("<div> Пока! </div>", {className: childData.id})
-					  	  	.addTo(map)
-					} else {
-						
-					}
-				}
-			});
-
-			ref.on('child_added', function (childSnapshot, prevChildKey) {
-				// foreach for child element 'shamora'
-				var key = childSnapshot.key();
-				// childData will be the actual contents of the child
-				var newData = childSnapshot.val();
-
-				marker.push(L.marker([newData.position.lat, newData.position.lng], {icon: myIcon, draggable: true })
-					.bindPopup("<div> Я новенький </div>", {className: newData.id})
-					.addTo(map))
-			});
-		}
-
+			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+				.bindPopup( html , {className: childData.id})
+				.addTo(map))
+		});
 
 		e.preventDefault();
 	});
