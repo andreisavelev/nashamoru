@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">На Море!</string>
+    <string name="btn_drive">Везу на море</string>
+    <string name="btn_want">Хочу на море</string>
+    <string name="btn_pay">Плачу за море</string>
+    <string name="btn_me">Информация обо мне</string>
+    
+    <string name="title_activity_my_informaion">Информация обо мне</string>
+    <string name="myInf_header">Информация обо мне</string>
+    <string name="myInf_textview_name_name">Ваше имя</string>
+    <string name="myInf_edittext_name_hint">Введите свое имя</string>
+    <string name="myInf_textview_phone_name">Ваш телефон</string>
+    <string name="myInf_edittext_phone_hint">Введите свой телефон</string>
+    <string name="myInf_textview_dis_name">Вид инвалидности</string>
+    <string name="btn_ok">Подтвердить</string>
+    
+    <string-array name="disabilityArray">
+	    <item>Кот</item>
+	    <item>Кошка</item>
+	    <item>Котёнок</item>
+	    <item>Животное</item>
+	</string-array>
+    
+    
+
+</resources>

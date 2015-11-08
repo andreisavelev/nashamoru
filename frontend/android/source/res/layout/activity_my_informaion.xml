@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent" >
+
+	<LinearLayout
+	    android:id="@+id/scrollChildLayer"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="fill_horizontal"
+	    android:layout_margin="0dp"
+	    android:gravity="center_horizontal"
+	    android:orientation="vertical" >
+	    
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:paddingTop="10dp"
+	        android:paddingBottom="10dp"
+	        android:background="@color/black40"
+	        android:textColor="@color/black"
+	        android:gravity="center_horizontal"
+	        android:text="@string/myInf_header"
+	        android:textSize="20sp" />
+	    
+	    <TextView 
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingTop="4dp"
+	        android:paddingBottom="4dp"
+	        android:textSize="16sp"
+	        android:text="@string/myInf_textview_name_name" />
+	    <EditText 
+	        android:id="@+id/name"
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/myInf_edittext_name_hint"
+	        android:inputType="textPersonName" />
+	    
+	    <TextView 
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingTop="4dp"
+	        android:paddingBottom="4dp"
+	        android:textSize="16sp"
+	        android:text="@string/myInf_textview_phone_name" />
+	    <EditText 
+	        android:id="@+id/phone"
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/myInf_edittext_phone_hint"
+	        android:inputType="phone" />
+	    
+	    <TextView 
+	        android:gravity="center_horizontal"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="16sp"
+	        android:text="@string/myInf_textview_dis_name" />
+
+	    <Spinner
+	        android:id="@+id/disSpinner"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:entries="@array/disabilityArray"
+	        android:gravity="center_vertical|center_horizontal" />
+		
+	    <Button 
+			android:text="@string/btn_ok" 
+			android:id="@+id/btnOk" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|center_horizontal"
+			android:textSize="18sp"
+			android:textStyle="bold" />
+"
+	    
+	</LinearLayout>
+</LinearLayout> 

@@ -1,0 +1,69 @@
+<LinearLayout android:id="@+id/mainLayout" 
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <WebView android:id="@+id/webView"
+         android:layout_above="@+id/buttonsLayout"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:layout_weight="1"/>
+  
+  <TableLayout 
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:stretchColumns="*" >
+      
+      <TableRow 
+          android:background="@drawable/backbuttons" >
+      
+	      <Button android:text="@string/btn_drive" 
+		          android:id="@+id/btnDrive" 
+		          android:layout_width="wrap_content" 
+		          android:layout_height="wrap_content"
+		          android:layout_gravity="center_horizontal"
+		          android:layout_centerHorizontal="true"
+		          android:layout_weight="1"
+		          android:textSize="13sp"
+		          android:textStyle="bold" />
+	      
+		  <Button android:text="@string/btn_want" 
+		          android:id="@+id/btnWant" 
+		          android:layout_width="wrap_content" 
+		          android:layout_height="wrap_content"
+		          android:layout_gravity="bottom|right"
+		          android:layout_weight="1"
+		          android:textSize="13sp"
+		          android:textStyle="bold"  />
+		  
+		  <Button android:text="@string/btn_pay" 
+		          android:id="@+id/btnPay" 
+		          android:layout_width="wrap_content" 
+		          android:layout_height="wrap_content"
+		          android:layout_gravity="bottom|left"
+		          android:layout_weight="1"
+		          android:textSize="13sp"
+		          android:textStyle="bold"  />
+		  
+	  </TableRow>
+	  
+      <TableRow >
+		  
+          <Button
+              android:id="@+id/btnMe"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="fill_vertical"
+              android:layout_span="3"
+              android:layout_weight="1"
+              android:text="@string/btn_me"
+              android:textSize="16sp"
+              android:textStyle="bold"
+              android:onClick="startMyInformaion" />
+          
+      </TableRow>
+	  
+	</TableLayout> 
+	  
+</LinearLayout>
