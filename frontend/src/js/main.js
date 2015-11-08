@@ -105,10 +105,16 @@ $(document).ready(function () {
 				key =  childSnapshot.key()
 				data = childSnapshot.val();
 
+				var bioData = data.bio;
+
+				if(typeof newData.bio !== 'undefined') {
+			    	bioData = newData.bio;
+			    }
+
 			    if (data.id === id) {
-			    	console.log(data.bio);
-			    	
-					ref.child(key).set({"id": id, position: newData.position, bio: newData.bio}, function (error) {
+			    	console.log(bioData);
+
+					ref.child(key).set({"id": id, position: newData.position, bio: bioData}, function (error) {
 			    		if(error) {
 			    			console.log(error);
 			    		} else {
@@ -347,6 +353,7 @@ $(document).ready(function () {
 
 				newIcon.on('dragend', function (e) {
 					var newData = e.target._latlng;
+					userData.position = newData;
 					updateUserData(userId.id, userData);
 					console.log(userData);
 				});
@@ -368,89 +375,104 @@ $(document).ready(function () {
 
 		ref.off('child_changed');
 		ref.off('child_added');
-
+		map.off('click');
 		setCookie(driver, true);
 
 		/* checkout to driver and get all data */
 		ref.once("value", function(snapshot) {
 		
-			// foreach for child element 'shamora'
-			var key = snapshot.key();
-			// childData will be the actual contents of the child
-			var childData = snapshot.val();
-		  
-			if(typeof childData.bio !== 'undefined') {
-				var tempData = JSON.parse(childData.bio);
-				var bioData = {};
-				for(var i = 0; i < tempData.length; i++) {
-					bioData[tempData[i].name] = tempData[i].value;
+			snapshot.forEach(function(childSnapshot) {
+
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
+			  
+				if(typeof childData.bio !== 'undefined') {
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var i = 0; i < tempData.length; i++) {
+						bioData[tempData[i].name] = tempData[i].value;
+					}
 				}
-			}
 				
-			var src = $("#bio-template").html();
-			var template = Handlebars.compile( src );
-			var html = template(bioData); 
-			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon})
-				.bindPopup("<div>"+ html +"</div>", {className: childData.id})
-		  	  	.addTo(map));
+				var src = $("#bio-template").html();
+				var template = Handlebars.compile( src );
+				var html = template(bioData); 
+				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+					.bindPopup("<div>"+ html +"</div>", {className: childData.id})
+			  	  	.addTo(map));
+				console.log("Driver mod add to map");
+
+		  	});
 		  
 		});
 
 		ref.on('child_changed', function (snapshot, prevChildKey) {
-			// foreach for child element 'shamora'
-			var key = snapshot.key();
-			// childData will be the actual contents of the child
-			var childData = snapshot.val();
+			if(getCookie(passenger)) {
 
-			for (var i =0; i < marker.length; i++) {
-				if ( marker[i]._popup.options.className === childData.id ) {
-					map.removeLayer(marker[i]);
-					console.log("Yes", marker[i]);
+			}  else {
+				// foreach for child element 'shamora'
+				var key = snapshot.key();
+				// childData will be the actual contents of the child
+				var childData = snapshot.val();
 
-					if(typeof childData.bio !== 'undefined') {
-						var tempData = JSON.parse(childData.bio);
-						var bioData = {};
-						for(var y = 0; y < tempData.length; y++) {
-							bioData[tempData[y].name] = tempData[y].value;
+				for (var i =0; i < marker.length; i++) {
+					if ( marker[i]._popup.options.className === childData.id ) {
+						map.removeLayer(marker[i]);
+						console.log("Yes", marker[i]);
+
+						if(typeof childData.bio !== 'undefined') {
+							var tempData = JSON.parse(childData.bio);
+							var bioData = {};
+							for(var y = 0; y < tempData.length; y++) {
+								bioData[tempData[y].name] = tempData[y].value;
+							}
 						}
-					}
-					
-					console.log(bioData);
-					var src = $("#bio-template").html();
-					var template = Handlebars.compile( src );
-					var html = template(bioData);
+						
+						console.log(bioData);
+						var src = $("#bio-template").html();
+						var template = Handlebars.compile( src );
+						var html = template(bioData);
 
-					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
-						.bindPopup( html , {className: childData.id})
-				  	  	.addTo(map)
-				} else {
-					
+						marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+							.bindPopup( html , {className: childData.id})
+					  	  	.addTo(map);
+					  	  	console.log("New Change");
+					} else {
+						
+					}
 				}
 			}
 		});
 
 		ref.on('child_added', function (childSnapshot, prevChildKey) {
-			// foreach for child element 'shamora'
-			var key = childSnapshot.key();
-			// childData will be the actual contents of the child
-			var childData = childSnapshot.val();
+			if (getCookie(passenger)) {
 
-			if(typeof childData.bio !== 'undefined') {
-				var tempData = JSON.parse(childData.bio);
-				var bioData = {};
-				for(var i = 0; i < tempData.length; i++) {
-					bioData[tempData[i].name] = tempData[i].value;
+			} else {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
+
+				if(typeof childData.bio !== 'undefined') {
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var i = 0; i < tempData.length; i++) {
+						bioData[tempData[i].name] = tempData[i].value;
+					}
 				}
-			}
-			
-			console.log(bioData);
-			var src = $("#bio-template").html();
-			var template = Handlebars.compile( src );
-			var html = template(bioData);
+				
+				console.log(bioData);
+				var src = $("#bio-template").html();
+				var template = Handlebars.compile( src );
+				var html = template(bioData);
 
-			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
-				.bindPopup( html , {className: childData.id})
-				.addTo(map))
+				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+					.bindPopup( html , {className: childData.id})
+					.addTo(map));
+					console.log("New added");
+			}
 		});
 
 		e.preventDefault();
