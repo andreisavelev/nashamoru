@@ -108,7 +108,7 @@ $(document).ready(function () {
 			    if (data.id === id) {
 			    	console.log(data.bio);
 			    	
-					ref.child(key).set({"id": newData.id, position: newData.position, bio: data.bio}, function (error) {
+					ref.child(key).set({"id": id, position: newData.position, bio: newData.bio}, function (error) {
 			    		if(error) {
 			    			console.log(error);
 			    		} else {
@@ -184,7 +184,7 @@ $(document).ready(function () {
 		getUserData(userData.id, function (position) {
 
 			console.log("getuserData called");
-			var currentMarker = currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
+			var currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
 			currentMarker.on('dragend', function (e) {
 				var newData = e.target._latlng;
 				updateUserData(userData.id, {id: userData.id, position: newData});
@@ -215,13 +215,13 @@ $(document).ready(function () {
 						}
 					}
 					
-					console.log(bioData);
 					var src = $("#bio-template").html();
 					var template = Handlebars.compile( src );
 					var html = template(bioData); 
 					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
 						.bindPopup("<div>"+ html +"</div>", {className: childData.id})
 				  	  	.addTo(map));
+					console.log("Driver mod add to map");
 
 			  });
 		  
@@ -229,6 +229,8 @@ $(document).ready(function () {
 
 
 		ref.on('child_changed', function (childSnapshot, prevChildKey) {
+
+
 			// foreach for child element 'shamora'
 			var key = childSnapshot.key();
 			// childData will be the actual contents of the child
@@ -251,7 +253,9 @@ $(document).ready(function () {
 
 					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
 						.bindPopup( html , {className: childData.id})
-				  	  	.addTo(map)
+				  	  	.addTo(map);
+				  	  	console.log("Driver mod changed");
+
 				} else {
 					
 				}
@@ -259,27 +263,31 @@ $(document).ready(function () {
 		});
 
 		ref.on('child_added', function (childSnapshot, prevChildKey) {
-			// foreach for child element 'shamora'
-			var key = childSnapshot.key();
-			// childData will be the actual contents of the child
-			var childData = childSnapshot.val();
+			if(getCookie(passenger)) {
+				console.log("Allready have cookie");
+			} else {
+				// foreach for child element 'shamora'
+				var key = childSnapshot.key();
+				// childData will be the actual contents of the child
+				var childData = childSnapshot.val();
 
-			if(typeof childData.bio !== 'undefined') {
-				var tempData = JSON.parse(childData.bio);
-				var bioData = {};
-				for(var i = 0; i < tempData.length; i++) {
-					bioData[tempData[i].name] = tempData[i].value;
+				if(typeof childData.bio !== 'undefined') {
+					var tempData = JSON.parse(childData.bio);
+					var bioData = {};
+					for(var i = 0; i < tempData.length; i++) {
+						bioData[tempData[i].name] = tempData[i].value;
+					}
 				}
-			}
-			
-			console.log(bioData);
-			var src = $("#bio-template").html();
-			var template = Handlebars.compile( src );
-			var html = template(bioData);
+				
+				var src = $("#bio-template").html();
+				var template = Handlebars.compile( src );
+				var html = template(bioData);
 
-			marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
-				.bindPopup( html , {className: childData.id})
-				.addTo(map))
+				marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon })
+					.bindPopup( html , {className: childData.id})
+					.addTo(map));
+				console.log("Driver mod added");
+			}
 		});
 	}
 
@@ -287,28 +295,26 @@ $(document).ready(function () {
 	// Remove all icons from map
 	$(passengerLink).on('click', function (e) {
 
-		var allMarkers = L.layerGroup(marker);
-		console.log(allMarkers);
-		
-		for(i=0;i<marker.length;i++) {
-			map.removeLayer(marker[i]);
-		}
+		if (getCookie(passenger)) {
+			console.log("We have kookie");
 
-		deleteCookie(driver);
-
-		/*$('.my-div-icon').remove();*/
-		map.removeLayer(markers);
-		
-		setCookie(passenger, JSON.stringify({"id": generateUserId()}));
-		
-		var formData;
-		
+		} else {
+			var allMarkers = L.layerGroup(marker);
 			
+			for(i=0;i<marker.length;i++) {
+				map.removeLayer(marker[i]);
+			}
 
-		
+			deleteCookie(driver);
+
+			/*$('.my-div-icon').remove();*/
+			//map.removeLayer(markers);
+			
+			setCookie(passenger, JSON.stringify({"id": generateUserId()}));
+			var formData;
 			map.once('click', function (e) {
 			
-			var position = e.latlng;
+				var position = e.latlng;
 				var userId = JSON.parse( getCookie(passenger) )
 				var userData;
 			
@@ -317,34 +323,41 @@ $(document).ready(function () {
 				$('#userinfo').modal('show');
 				$('#userinfo').on('shown.bs.modal', function (event) {
 					$( "#userinfoform" ).on( "submit", function( event ) {
-						  $('#userinfo').modal('hide');
-						  formData = $( this ).serializeArray();
-						  event.preventDefault();
-						 userData = {								
+						$('#userinfo').modal('hide');
+						formData = $( this ).serializeArray();
+						event.preventDefault();
+						userData = {								
 							"id":  userId.id,
 							"position": position,
 							"bio": JSON.stringify(formData)				
-						 };
-						 saveUserData(userData, function () {
-						  console.log("SEAVED", userId.id);
+						};
+						saveUserData(userData, function () {
+						  console.log("SEAVED")
 						});
 					});
 					
 				});
 			
 
-				var newIcon = setIcon(position);
-				
+				var newIcon = L.marker([position.lat, position.lng], {icon: myIcon, draggable: true });
+
+				newIcon.addTo(map);
+
+				console.log("New Icon set", newIcon);
 
 				newIcon.on('dragend', function (e) {
 					var newData = e.target._latlng;
-					updateUserData(userId.id, newData);
+					updateUserData(userId.id, userData);
+					console.log(userData);
 				});
 			});
 
 			cnt = 1;
 
-			console.log("IN THE IF STATEMENT", cnt);
+			console.log("IN THE IF STATEMENT", cnt);	
+		}
+
+		
 
 		e.preventDefault();
 	});
@@ -373,7 +386,7 @@ $(document).ready(function () {
 					bioData[tempData[i].name] = tempData[i].value;
 				}
 			}
-			consoe.log()	
+				
 			var src = $("#bio-template").html();
 			var template = Handlebars.compile( src );
 			var html = template(bioData); 
