@@ -25,8 +25,9 @@ gulp.task('scripts', function() {
 	return gulp.src([
 		"./frontlibs/jquery/dist/jquery.min.js",
 		"./frontlibs/bootstrap/dist/js/bootstrap.min.js",
-		"frontlibs/leaflet/dist/leaflet.js",
-		"frontlibs/firebase/firebase.js"
+		"./frontlibs/leaflet/dist/leaflet.js",
+		"./frontlibs/firebase/firebase.js",
+		"./frontlibs/handlebars/handlebars.min.js"
 	])
 		.pipe(concat('common.js'))
 		.pipe(gulp.dest('./frontend/src/js/'));

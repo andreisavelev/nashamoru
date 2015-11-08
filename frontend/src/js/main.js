@@ -193,7 +193,7 @@ $(document).ready(function () {
 			currentMarker = L.marker([position.lat.toFixed(3), position.lng.toFixed(3)], {icon: myIcon, draggable: true }).addTo(map);
 			currentMarker.on('dragend', function (e) {
 				var newData = e.target._latlng;
-				updateUserData(userData.id, newData);
+				updateUserData(userData.id, {id: userData.id, position: newData, bio: userData.bio});
 			});
 		});
 
@@ -213,11 +213,20 @@ $(document).ready(function () {
 					// childData will be the actual contents of the child
 					var childData = childSnapshot.val();
 				  
-
-
-
+					if(typeof childData.bio !== 'undefined') {
+						var tempData = JSON.parse(childData.bio);
+						var bioData = {};
+						for(var i = 0; i < tempData.length; i++) {
+							bioData[tempData[i].name] = tempData[i].value;
+						}
+					}
+					
+					console.log(bioData);
+					var src = $("#bio-template").html();
+					var template = Handlebars.compile( src );
+					var html = template(bioData); 
 					marker.push(L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
-						.bindPopup("<div>"+ childData.bio +"</div>", {className: childData.id})
+						.bindPopup("<div>"+ html +"</div>", {className: childData.id})
 				  	  	.addTo(map));
 
 			  });
@@ -236,8 +245,21 @@ $(document).ready(function () {
 					map.removeLayer(marker[i]);
 					console.log("Yes", marker[i]);
 
+					if(typeof childData.bio !== 'undefined') {
+						var tempData = JSON.parse(childData.bio);
+						var bioData = {};
+						for(var i = 0; i < tempData.length; i++) {
+							bioData[tempData[i].name] = tempData[i].value;
+						}
+					}
+					
+					console.log(bioData);
+					var src = $("#bio-template").html();
+					var template = Handlebars.compile( src );
+					var html = template(bioData);
+
 					marker[i] = L.marker([childData.position.lat, childData.position.lng], {icon: myIcon, draggable: true })
-						.bindPopup("<div> Пока! </div>", {className: childData.id})
+						.bindPopup( html , {className: childData.id})
 				  	  	.addTo(map)
 				} else {
 					
